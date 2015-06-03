@@ -1,0 +1,222 @@
+<html>
+	<head>
+		<title>Splicing Data Browser</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />		
+
+	<!--	<script type="text/javascript" src="js/fetchEventDataAndUpdate.js"></script> -->
+
+		<script type="application/shiny-singletons"></script>
+		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.0];htmlwidgets[0.4];datatables[1.10.5];datatables-binding[0.0.35];bootstrap[3.3.1]</script>
+		<script src="shared/json2-min.js"></script>
+		<script src="shared/jquery.js"></script>
+		<script src="shared/jquery.min.js"></script>
+		<link href="shared/shiny.css" rel="stylesheet" />
+		<script src="shared/shiny.min.js"></script>
+		<link href="shared/bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<script src="shared/bootstrap/js/bootstrap.js"></script>
+		<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
+		<script src="shared/bootstrap/shim/respond.min.js"></script>
+
+		<link href="shared/datatables/css/dataTables.bootstrap.css" rel="stylesheet" />
+		<link href="shared/datatables/css/dataTables.extra.css" rel="stylesheet" />
+		<script src="shared/datatables/js/jquery.dataTables.min.js"></script>
+		<script src="shared/datatables/js/dataTables.bootstrap.js"></script>
+
+		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
+		<script src="datatables-binding-0.0.35/datatables.js"></script>
+<!--
+		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
+		<link href="datatables-1.10.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+		<script src="datatables-1.10.5/js/jquery.dataTables.min.js"></script>
+		<script src="datatables-binding-0.0.35/datatables.js"></script>
+-->
+		<script src="__assets__/sockjs-0.3.min.js"></script>
+		<script src="__assets__/shiny-server.js"></script>
+		<!-- WashU Browser -->
+		<link rel="stylesheet" type="text/css" href="http://23.236.55.13/browser/style.css" />
+		<script type="text/javascript" src="http://23.236.55.13/browser/base.js"></script>
+		<script type="text/javascript" src="http://23.236.55.13/browser/personality.js"></script>
+		<script type="text/javascript" src="http://23.236.55.13/browser/embed.js"></script>
+
+		<script id="source" language="javascript" type="text/javascript">
+		var eventname = 'Event Name';
+		$(function() { 
+			$(document).on('click', '.miso', function() {
+				eventname = $(this).attr("eventID");
+				var el = document.getElementById('misoEvent');				
+				el.value = eventname;
+				Shiny.onInputChange("misoEvent", eventname);
+			});
+		});
+		</script>
+	
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<div class="row-fluid" style=width:100%>
+							<div style="display: inline-block; margin: 0 15px">
+								<a class="h4" href="http://23.236.55.13" >Home</a>
+							</div>
+							<div style="display: inline-block; margin: 0px 15px">
+								<a class="h4" href="http://23.236.55.13/browser">Full Genome Browser</a>
+							</div>
+							<div style="display: inline-block; margin: 0px 15px">
+								<a href='javascript:;' eventID='chr19:7152737:7152938:-@chr19:7150508:7150543:-@chr19:7142827:7143101:-.A' class='miso'>Test</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--	
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<div class="row-fluid" style="width:100%">
+							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+								<div class="form-group shiny-input-container">
+									<label for="coordinates">Coordinates:</label>
+									<input id="coordinates" type="text" class="form-control" value=""/>
+								</div>
+							</div>
+							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+								<div id="select_gene" class="shiny-html-output"></div>
+							</div>
+							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+								<div id="select_isoform" class="shiny-html-output"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+-->
+		
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<div class="row-fluid" style="width:100%">
+							<div style="display: inline-block; width: 100%; margin: auto 1%; vertical-align: text-top">
+								<div class="form-group shiny-input-container">
+									<label for="misoEvent">Miso Event:</label>
+									<input id="misoEvent" type="text" class="form-control" value=""/>
+								</div>
+							</div>							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class = "row">
+						<div style='margin:5px 20px; padding:5px 20px;' id="browser"></div>
+					</div>
+				</div>
+			</div>			
+		</div>
+		
+		<script type='text/javascript'>
+		embed_washugb({
+			host:'http://23.236.55.13/',
+			container:document.getElementById('browser'),
+			panelWidth: document.getElementById('browser').clientWidth - 150,
+			genome:'hg19',
+			hideMetadataColormap:true,
+			noDefaultTrack:true,
+			noDeleteButton:true,
+			coordinate:'chr3:151985828-152183568',
+			foregroundColor:'#000000',
+			backgroundColor:'#FFFFFF',
+			showContent:[
+				{type:'annotation',name:'MISO splicing events',url:'http://23.236.55.13/d/hg19/nonUTRevents.hammock.gz',
+					mode:'full',
+				},
+				{type:'annotation',name:'RefSeq genes',url:'http://localhost/d/hg19/refGene.gz',
+					mode:'full',
+					boxcolor:'#002EB8',textcolor:'#ffffff',
+				},
+				{type:'annotation',name:'Ensembl genes',url:'http://localhost/d/hg19/ensGene.gz',
+					mode:'full',
+					boxcolor:'#891B00',textcolor:'#ffffff',
+				},
+				{type:'annotation',name:'UCSC known genes',url:'http://localhost/d/hg19/knownGene.gz',
+					mode:'full',
+					boxcolor:'#048091',textcolor:'#ffffff',
+				},
+				{type:'annotation',name:'Gencode',url:'http://localhost/d/hg19/gencodeV17.gz',
+					mode:'full',
+					boxcolor:'#339933',textcolor:'#ffffff',
+				},
+			],
+		});
+		</script>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<div class="tabbable tabs-above">
+							<ul class="nav nav-pills shiny-tab-input" id="plots_tabbox">
+								<li class="active">
+									<a href="#tab-7775-1" data-toggle="tab" data-value="Jitter Plot">Jitter Plot</a>
+								</li>
+								<li>
+									<a href="#tab-7775-2" data-toggle="tab" data-value="Boxplot">Boxplot</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" data-value="Jitter Plot" id="tab-7775-1">
+									<div id="jitter_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
+								</div>
+								<div class="tab-pane" data-value="Boxplot" id="tab-7775-2">
+									<div id="box_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-2">
+					<div id="show_vars" class="shiny-html-output"></div>
+					<div id="download" class="shiny-html-output"></div>
+				</div>
+				<div class="col-sm-10">
+					<div class="well">
+						<div class="tabbable tabs-above">
+							<ul class="nav nav-pills shiny-tab-input" id="raw_data_box">
+								<li class="active">
+									<a href="#tab-2048-1" data-toggle="tab" data-value="MISO Data">MISO Data</a>
+								</li>
+								<li>
+									<a href="#tab-2048-2" data-toggle="tab" data-value="Sample Metadata">Sample Metadata</a>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
+									<div id="miso_data" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
+								</div>
+								<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
+									<div id="sample_metadata" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</body>
+</html>
