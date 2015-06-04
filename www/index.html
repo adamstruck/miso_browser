@@ -21,7 +21,7 @@
 		<![endif]-->
 		<script src="__assets__/sockjs-0.3.min.js"></script>
 		<script src="__assets__/shiny-server.js"></script>
-		
+
 <!--
 		<script src="jquery-1.11.1/jquery.min.js"></script>
 		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
@@ -42,12 +42,36 @@
 		$(function() { 
 			$(document).on('click', '.miso', function() {
 				eventname = $(this).attr("eventID");
+				//var el = document.getElementById('misoEvent');
+				//el.value = eventname;
+				//Shiny.onInputChange("misoEvent", eventname);
+				$('#misoSelect').append($('<option>', {
+				    value: eventname,
+				    text: eventname
+				}));
+				$('#misoSelect').val(eventname);
+				$('#misoSelect').change();
+			});
+			$('#misoSelect').change(function() {
+			    eventname = $(this).val();
+			    Shiny.onInputChange("misoEvent", eventname);
+			});
+
+		});
+		</script>	
+<!--
+		<script id="source" language="javascript" type="text/javascript">
+		var eventname = 'Event Name';
+		$(function() { 
+			$(document).on('click', '.miso', function() {
+				eventname = $(this).attr("eventID");
 				var el = document.getElementById('misoEvent');				
 				el.value = eventname;
 				Shiny.onInputChange("misoEvent", eventname);
 			});
 		});
 		</script>	
+-->
 	</head>
 
 	<body>
@@ -57,13 +81,10 @@
 					<div class="well">
 						<div class="row-fluid" style=width:100%>
 							<div style="display: inline-block; margin: 0 15px">
-								<a class="h4" href="http://23.236.55.13" >Home</a>
+								<a class="h4" href="http://dmseq.org" >Home</a>
 							</div>
 							<div style="display: inline-block; margin: 0px 15px">
-								<a class="h4" href="http://23.236.55.13/browser">Full Genome Browser</a>
-							</div>
-							<div style="display: inline-block; margin: 0px 15px">
-								<a href='javascript:;' eventID='chr19:7152737:7152938:-@chr19:7150508:7150543:-@chr19:7142827:7143101:-.A' class='miso'>Test</a>
+								<a class="h4" href="http://dmseq.org/browser">Full Genome Browser</a>
 							</div>
 						</div>
 					</div>
@@ -94,23 +115,6 @@
 			</div>
 		</div>
 -->
-		
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="well">
-						<div class="row-fluid" style="width:100%">
-							<div style="display: inline-block; width: 100%; margin: auto 1%; vertical-align: text-top">
-								<div class="form-group shiny-input-container">
-									<label for="misoEvent">Miso Event:</label>
-									<input id="misoEvent" type="text" class="form-control" value=""/>
-								</div>
-							</div>							
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -123,7 +127,7 @@
 		</div>
 		
 		<script type='text/javascript'>
-		embed_washugb({
+		var browserObj = embed_washugb({
 			host:'http://23.236.55.13/',
 			container:document.getElementById('browser'),
 			panelWidth: document.getElementById('browser').clientWidth - 150,
@@ -135,8 +139,11 @@
 			foregroundColor:'#000000',
 			backgroundColor:'#FFFFFF',
 			showContent:[
-				{type:'annotation',name:'MISO splicing events',url:'http://23.236.55.13/d/hg19/nonUTRevents_all.hammock.gz',
+				{type:'annotation',name:'MISO splicing events',url:'http://localhost/d/hg19/nonUTRevents_multiiso.hammock.gz',
 					mode:'full',
+					categories:{
+						1:['single-alternative-isoform','#AA6039'], 
+						2:['multiple-alternative-isoforms','#257059'],}
 				},
 				{type:'annotation',name:'RefSeq genes',url:'http://localhost/d/hg19/refGene.gz',
 					mode:'full',
@@ -156,7 +163,33 @@
 				},
 			],
 		});
+		$(function() { 
+			$(window).resize(function() {
+				var w = $(window).width();
+				browserObj.sethmspan_refresh(document.getElementById('browser').clientWidth - 120);
+			});
+		});
 		</script>
+		
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="well">
+						<div style="display: block; width: 100%; margin: auto; vertical-align: middle" class="form-group shiny-input-container">
+							<select id="misoSelect" class="form-control">
+								<option>Choose a MISO splicing event</option>
+							</select>
+						</div>
+						<div style="display: none;" class="form-group shiny-input-container">
+							<input id="misoEvent" type="text" class="form-control" value=""/>
+						</div>
+						<div style="display: block; margin: 1% 0 0 0; text-align: center">
+							<button id="reset_inputs" type="button" class="btn btn-default action-button">Reset</button>
+						</div>
+					</div>
+				</div>                    
+			</div>
+		</div>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -165,18 +198,18 @@
 						<div class="tabbable tabs-above">
 							<ul class="nav nav-pills shiny-tab-input" id="plots_tabbox">
 								<li class="active">
-									<a href="#tab-7775-1" data-toggle="tab" data-value="Jitter Plot">Jitter Plot</a>
+									<a href="#tab-7775-1" data-toggle="tab" data-value="PSI ~ Diagnosis">PSI ~ Diagnosis</a>
 								</li>
 								<li>
-									<a href="#tab-7775-2" data-toggle="tab" data-value="Boxplot">Boxplot</a>
+									<a href="#tab-7775-2" data-toggle="tab" data-value="PSI ~ Sample">PSI ~ Sample</a>
 								</li>
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane active" data-value="Jitter Plot" id="tab-7775-1">
-									<div id="jitter_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
+								<div class="tab-pane active" data-value="PSI ~ Diagnsosis" id="tab-7775-1">
+									<div id="psi_diagnosis_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
 								</div>
-								<div class="tab-pane" data-value="Boxplot" id="tab-7775-2">
-									<div id="box_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
+								<div class="tab-pane" data-value="PSI ~ Sample" id="tab-7775-2">
+									<div id="psi_sample_plot" class="shiny-plot-output" style="width: 100% ; height: 600px"></div>
 								</div>
 							</div>
 						</div>
