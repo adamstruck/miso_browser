@@ -3,42 +3,40 @@
 		<title>Splicing Data Browser</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1" />		
-
-	<!--	<script type="text/javascript" src="js/fetchEventDataAndUpdate.js"></script> -->
-
 		<script type="application/shiny-singletons"></script>
-		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.0];htmlwidgets[0.4];datatables[1.10.5];datatables-binding[0.0.35];bootstrap[3.3.1]</script>
+		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.0];font-awesome[4.2.0];selectize[0.11.2];htmlwidgets[0.4];datatables[1.10.5];datatables-binding[0.0.35];bootstrap[3.3.1]</script>
 		<script src="shared/json2-min.js"></script>
 		<script src="shared/jquery.js"></script>
-		<script src="shared/jquery.min.js"></script>
 		<link href="shared/shiny.css" rel="stylesheet" />
-		<script src="shared/shiny.min.js"></script>
+		<script src="shared/shiny.js"></script>
 		<link href="shared/bootstrap/css/bootstrap.css" rel="stylesheet" />
 		<script src="shared/bootstrap/js/bootstrap.js"></script>
 		<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
 		<script src="shared/bootstrap/shim/respond.min.js"></script>
-
-		<link href="shared/datatables/css/dataTables.bootstrap.css" rel="stylesheet" />
-		<link href="shared/datatables/css/dataTables.extra.css" rel="stylesheet" />
-		<script src="shared/datatables/js/jquery.dataTables.min.js"></script>
-		<script src="shared/datatables/js/dataTables.bootstrap.js"></script>
-
-		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
-		<script src="datatables-binding-0.0.35/datatables.js"></script>
+		<link href="shared/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+		<script src="shared/selectize/js/selectize.min.js"></script>
+		<!--[if lt IE 9]>
+		<script src="shared/selectize/js/es5-shim.min.js"></script>
+		<![endif]-->
+		<script src="__assets__/sockjs-0.3.min.js"></script>
+		<script src="__assets__/shiny-server.js"></script>
+		
 <!--
+		<script src="jquery-1.11.1/jquery.min.js"></script>
 		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
 		<link href="datatables-1.10.5/css/jquery.dataTables.min.css" rel="stylesheet" />
 		<script src="datatables-1.10.5/js/jquery.dataTables.min.js"></script>
 		<script src="datatables-binding-0.0.35/datatables.js"></script>
 -->
-		<script src="__assets__/sockjs-0.3.min.js"></script>
-		<script src="__assets__/shiny-server.js"></script>
+
 		<!-- WashU Browser -->
 		<link rel="stylesheet" type="text/css" href="http://23.236.55.13/browser/style.css" />
 		<script type="text/javascript" src="http://23.236.55.13/browser/base.js"></script>
 		<script type="text/javascript" src="http://23.236.55.13/browser/personality.js"></script>
 		<script type="text/javascript" src="http://23.236.55.13/browser/embed.js"></script>
 
+		<!-- Miso class event listener -->
 		<script id="source" language="javascript" type="text/javascript">
 		var eventname = 'Event Name';
 		$(function() { 
@@ -49,8 +47,7 @@
 				Shiny.onInputChange("misoEvent", eventname);
 			});
 		});
-		</script>
-	
+		</script>	
 	</head>
 
 	<body>
@@ -138,7 +135,7 @@
 			foregroundColor:'#000000',
 			backgroundColor:'#FFFFFF',
 			showContent:[
-				{type:'annotation',name:'MISO splicing events',url:'http://23.236.55.13/d/hg19/nonUTRevents.hammock.gz',
+				{type:'annotation',name:'MISO splicing events',url:'http://23.236.55.13/d/hg19/nonUTRevents_all.hammock.gz',
 					mode:'full',
 				},
 				{type:'annotation',name:'RefSeq genes',url:'http://localhost/d/hg19/refGene.gz',
@@ -205,6 +202,7 @@
 									<a href="#tab-2048-2" data-toggle="tab" data-value="Sample Metadata">Sample Metadata</a>
 								</li>
 							</ul>
+							<!--
 							<div class="tab-content">
 								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
 									<div id="miso_data" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
@@ -212,9 +210,18 @@
 								<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
 									<div id="sample_metadata" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
 								</div>
-							</div>
+							</div>					
+							-->
+							<div class="tab-content">
+								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
+									<div id="miso_data_ui" class="shiny-html-output"></div>
+								</div>
+								<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
+									<div id="sample_metadata_ui" class="shiny-html-output"></div>
+								</div>
+							</div>					
 						</div>
-					</div>
+					</div> 				
 				</div>
 			</div>			
 		</div>

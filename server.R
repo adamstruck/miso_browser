@@ -18,6 +18,7 @@ function(input, output, session) {
     ##
     ## Reactive inputs
     ##
+
     ## rinputs <- reactiveValues(coordinates = NULL, gene = NULL, isoform = NULL, miso_event = NULL)
 
     ## observe({
@@ -58,7 +59,6 @@ function(input, output, session) {
     ##
     ## Reactive miso data selection 
     ##
-
     MISOdataInput <- reactive({
         MISOdata <- miso_sqlite      
         miso_event <- input$misoEvent
@@ -79,6 +79,7 @@ function(input, output, session) {
         }
         selected_cols <- miso_cols()
         MISOdata <- select_(MISOdata, .dots = selected_cols)
+        MISOdata <- MISOdata %>% filter(tissue %in% c("Tibialis", "Quad", "Heart"), diagnosis %in% c("DM1", "Control"))
         MISOdata_df <- collect(MISOdata)
         MISOdata_df
     })
@@ -110,9 +111,9 @@ function(input, output, session) {
     ##     } 
     ## })
     
-    ## ##
-    ## ## Render isoform selection ui
-    ## ##
+    ##
+    ## Render isoform selection ui
+    ##
     ## output$select_isoform <- renderUI({
     ##     selectizeInput(inputId = "isoform",
     ##                    label = "Select Isoform:",
@@ -127,43 +128,105 @@ function(input, output, session) {
     ##
     ## Plot psi values
     ##
+    ## output$jitter_plot <- renderPlot({
+    ##     miso_event <- input$misoEvent
+    ##     plot_main <- ggplot(MISOdataInput(), aes_string(x = "diagnosis", y = "miso_posterior_mean"))
+    ##     if (miso_event != "") {
+    ##         plot_main <- plot_main +
+    ##             geom_point(aes_string(color = "tissue", shape = "diagnosis"),
+    ##                        alpha = 1, size = 3, position = position_jitter(width=0.1, height=0)) +
+    ##             scale_colour_discrete(guide = FALSE) +
+    ##             labs(x = "Tissue", y = "PSI") +
+    ##             theme_bw(15) +
+    ##             theme(axis.text.x = element_text(angle = 45, hjust = 1))
+            
+    ##     } else {
+    ##         plot_main <- plot_main +
+    ##             geom_blank() +
+    ##             labs(x = "Tissue", y = "PSI") +
+    ##             theme_bw(15) +
+    ##             theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    ##     }
+    ##     print(plot_main)
+    ## })
+       
+    ## output$box_plot <- renderPlot({
+    ##     miso_event <- input$misoEvent
+    ##     plot_main <- ggplot(MISOdataInput(), aes_string(x = "diagnosis", y = "miso_posterior_mean"))
+    ##     if (miso_event != "") {
+    ##         plot_main <- plot_main +
+    ##             geom_boxplot(aes_string(fill = "diagnosis")) +
+    ##             labs(x = "Diagnosis", y = "PSI") +
+    ##             scale_fill_discrete(guide = FALSE) +
+    ##             facet_wrap(~tissue) +
+    ##             theme_bw(15)
+    ##     } else {
+    ##         plot_main <- plot_main +
+    ##             geom_blank() +
+    ##             labs(x = "Diagnosis", y = "PSI") +
+    ##             theme_bw(15)
+    ##     }
+    ##     print(plot_main)
+    ## })
+
+    
     output$jitter_plot <- renderPlot({
         miso_event <- input$misoEvent
-        plot_main <- ggplot(MISOdataInput(), aes_string(x = "tissue", y = "miso_posterior_mean"))
-        if (miso_event != "") {
+        if (miso_event != "") {            
+            plot_main <- ggplot(MISOdataInput())
             plot_main <- plot_main +
-                geom_point(aes_string(color = "tissue", shape = "diagnosis"),
-                           alpha = 1, size = 3, position = position_jitter(width=0.1, height=0)) +
-                scale_colour_discrete(guide = FALSE) +
-                labs(x = "Tissue", y = "PSI") +
-                theme_bw(15) +
-                theme(axis.text.x = element_text(angle = 45, hjust = 1))
-            
-            } else {
-                plot_main <- plot_main +
-                    geom_blank() +
-                    labs(x = "Tissue", y = "PSI") +
-                    theme_bw(15) +
-                    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-            }
-        print(plot_main)
-    })
-
-    output$box_plot <- renderPlot({
-        miso_event <- input$misoEvent
-        plot_main <- ggplot(MISOdataInput(), aes_string(x = "diagnosis", y = "miso_posterior_mean"))
-        if (miso_event != "") {
-            plot_main <- plot_main +
-                geom_boxplot(aes_string(fill = "diagnosis")) +
-                labs(x = "Diagnosis", y = "PSI") +
+                geom_point(aes(x = 2^as.numeric(factor(diagnosis))-0.5,
+                               y = miso_posterior_mean),
+                           position = position_jitter(width = 0.1),
+                           size = 3,
+                           alpha=0.75) +
+                geom_boxplot(aes(x = 2^as.numeric(factor(diagnosis)),
+                                 y = miso_posterior_mean,
+                                 fill = diagnosis),
+                             width = .75,
+                             size = 0.75,
+                             alpha = 0.75,
+                             outlier.shape = NA) +
+                labs(y = "PSI", x = "Diagnosis") +
+                theme_bw(25) +
+                scale_x_continuous(breaks = c(1.75, 3.75), labels = c("Control", "DM1"), limits=c(1.25, 4.5)) +
                 scale_fill_discrete(guide = FALSE) +
-                facet_wrap(~tissue) +
-                theme_bw(15)
+                facet_wrap(~tissue, nrow=1, scales = "fixed")            
         } else {
+            miso_event <- input$misoEvent
+            plot_main <- ggplot(MISOdataInput(), aes_string(x = "diagnosis", y = "miso_posterior_mean"))
             plot_main <- plot_main +
                 geom_blank() +
                 labs(x = "Diagnosis", y = "PSI") +
-                theme_bw(15)
+                theme_bw(25)
+        }
+        print(plot_main)
+    })
+
+    
+    output$box_plot <- renderPlot({
+        miso_event <- input$misoEvent
+        if (miso_event != "") {
+            plot_main <- MISOdataInput() %>% arrange(miso_posterior_mean) %>%
+                ggplot(aes(x = factor(sample, levels = sample),
+                           y = miso_posterior_mean))
+            plot_main <- plot_main +
+                geom_point(aes(colour = diagnosis),
+                               size = 3,
+                           alpha=0.75) +
+                geom_errorbar(aes(ymax = ci_high, ymin = ci_low),
+                              width = 0.25,
+                              alpha = 0.75) + 
+                labs(x = "Sample", y = "PSI") +
+                facet_wrap(~tissue, nrow = 3, scales = "free_x") +
+                theme_bw(25) +
+                theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 15))
+        } else {
+            plot_main <- ggplot(MISOdataInput(), aes_string(x = "diagnosis", y = "miso_posterior_mean"))
+            plot_main <- plot_main +
+                geom_blank() +
+                labs(x = "Diagnosis", y = "PSI") +
+                theme_bw(25)
         }
         print(plot_main)
     })
@@ -241,21 +304,33 @@ function(input, output, session) {
     ##
     ## Output miso data table
     ##
+    ## output$miso_data_ui <- renderUI({
+    ##     wellPanel(
+    ##         tabsetPanel(
+    ##             id = "raw_data_box",
+    ##             type = "pills",
+    ##             tabPanel(title = "MISO Data",
+    ##                      tableOutput("miso_data"),
+    ##                      style = "height: 600px; overflow: auto"
+    ##                      )
+    ##         )
+    ##     )
+    ## })    
+    
     output$miso_data <- DT::renderDataTable({
-        ## input$submit
-        ## isolate({
-            data <- MISOdataInput()
-            DT::datatable(data,
-                          rownames = FALSE,
-                          options = list(searching = FALSE,
-                                         lengthMenu = c(25, 50, 100, 200),
-                                         pageLength = 25))
-        ## })
+        data <- MISOdataInput()
+        DT::datatable(data,
+                      rownames = FALSE,
+                      options = list(searching = FALSE,
+                                     lengthMenu = c(25, 50, 100, 200),
+                                     pageLength = 25))    
     })
 
     ##
     ## Output sample metadata table
     ##
+    ## output$sample_metadata_ui <- renderUI({DT::dataTableOutput(outputId = "sample_metadata")})
+    
     output$sample_metadata <- DT::renderDataTable({
         data <- sample_metadata_input()
         DT::datatable(data,
