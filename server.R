@@ -79,8 +79,10 @@ function(input, output, session) {
             MISOdata <- head(MISOdata)[0,]
         }
         selected_cols <- miso_cols()
+        MISOdata <- MISOdata %>%
+            filter(tissue %in% c("Tibialis", "Quad", "Heart"), diagnosis %in% c("DM1", "Control")) %>%
+            arrange(sampleID)
         MISOdata <- select_(MISOdata, .dots = selected_cols)
-        MISOdata <- MISOdata %>% filter(tissue %in% c("Tibialis", "Quad", "Heart"), diagnosis %in% c("DM1", "Control"))
         MISOdata_df <- collect(MISOdata)
         MISOdata_df
     })
@@ -92,6 +94,7 @@ function(input, output, session) {
         if (dim(MISOdata)[1] > 0 && length(samples) > 1) {
             selected_cols <- metadata_cols()        
             sample_metadata %>%
+                arrange(sampleID) %>%
                 filter(sampleID %in% samples) %>% 
                 select_(.dots = selected_cols)
         } else {
@@ -268,36 +271,32 @@ function(input, output, session) {
 
     
     ## Output miso data table
-    output$miso_data_ui <- renderTable({
-        MISOdataInput()
-    })
-
-    ## output$miso_data_ui <- renderUI(DT::dataTableOutput(outputId = "miso_data"))
-    
-    ## output$miso_data <- DT::renderDataTable({
-    ##     DT::datatable(MISOdataInput(),
-    ##                   rownames = FALSE,
-    ##                   options = list(searching = FALSE,
-    ##                                  lengthMenu = c(25, 50, 100, 200),
-    ##                                  pageLength = 25))
+    ## output$miso_data_ui <- renderTable({
+    ##     MISOdataInput()
     ## })
+
+    output$miso_data <- DT::renderDataTable({
+        DT::datatable(MISOdataInput(),
+                      rownames = FALSE,
+                      options = list(searching = FALSE,
+                                     lengthMenu = c(25, 50, 100, 200),
+                                     pageLength = 25))
+    })
 
     ##
     ## Output sample metadata table
     ##
-    output$sample_metadata_ui <- renderTable({
-        sample_metadata_input()
-    })
-    
-    ## output$sample_metadata_ui <- renderUI({DT::dataTableOutput(outputId = "sample_metadata")})
-    
-    ## output$sample_metadata <- DT::renderDataTable({
-    ##     DT::datatable(sample_metadata_input(),
-    ##                   rownames = FALSE,
-    ##                   options = list(searching = FALSE,
-    ##                                  lengthMenu = list(c(25, 50, -1), c("25", "50", "All")),
-    ##                                  pageLength = 25))
+    ## output$sample_metadata_ui <- renderTable({
+    ##     sample_metadata_input()
     ## })
+    
+    output$sample_metadata <- DT::renderDataTable({
+        DT::datatable(sample_metadata_input(),
+                      rownames = FALSE,
+                      options = list(searching = FALSE,
+                                     lengthMenu = list(c(25, 50, -1), c("25", "50", "All")),
+                                     pageLength = 25))
+    })
     
     ##
     ## Download handler

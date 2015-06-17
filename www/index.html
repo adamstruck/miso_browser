@@ -2,33 +2,25 @@
 	<head>
 		<title>Splicing Data Browser</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />		
 		<script type="application/shiny-singletons"></script>
-		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.0];font-awesome[4.2.0];selectize[0.11.2];htmlwidgets[0.4];datatables[1.10.5];datatables-binding[0.0.35];bootstrap[3.3.1]</script>
+		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.1];htmlwidgets[0.4];datatables-binding[0.1];bootstrap[3.3.1]</script>
 		<script src="shared/json2-min.js"></script>
-		<script src="shared/jquery.js"></script>
+		<script src="jquery.min.js"></script>
 		<link href="shared/shiny.css" rel="stylesheet" />
-		<script src="shared/shiny.js"></script>
-		<link href="shared/bootstrap/css/bootstrap.css" rel="stylesheet" />
-		<script src="shared/bootstrap/js/bootstrap.js"></script>
+		<script src="shared/shiny.min.js"></script>
+		<script src="htmlwidgets.js"></script>
+		<script src="datatables.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<script src="shared/bootstrap/js/bootstrap.min.js"></script>
 		<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
 		<script src="shared/bootstrap/shim/respond.min.js"></script>
-		<link href="shared/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
 		<link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
 		<script src="shared/selectize/js/selectize.min.js"></script>
 		<!--[if lt IE 9]>
 		<script src="shared/selectize/js/es5-shim.min.js"></script>
 		<![endif]-->
-		<script src="__assets__/sockjs-0.3.min.js"></script>
-		<script src="__assets__/shiny-server.js"></script>
-
-<!--
-		<script src="jquery-1.11.1/jquery.min.js"></script>
-		<script src="htmlwidgets-0.4/htmlwidgets.js"></script>
-		<link href="datatables-1.10.5/css/jquery.dataTables.min.css" rel="stylesheet" />
-		<script src="datatables-1.10.5/js/jquery.dataTables.min.js"></script>
-		<script src="datatables-binding-0.0.35/datatables.js"></script>
--->
 
 		<!-- WashU Browser -->
 		<link rel="stylesheet" type="text/css" href="http://23.236.55.13/browser/style.css" />
@@ -91,7 +83,8 @@
 				</div>
 			</div>
 		</div>
-<!--	
+
+<!--	Search for events using shiny inputs
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-sm-12">
@@ -157,10 +150,10 @@
 					mode:'full',
 					boxcolor:'#048091',textcolor:'#ffffff',
 				},
-				{type:'annotation',name:'Gencode',url:'http://localhost/d/hg19/gencodeV17.gz',
-					mode:'full',
-					boxcolor:'#339933',textcolor:'#ffffff',
-				},
+				//{type:'annotation',name:'Gencode',url:'http://localhost/d/hg19/gencodeV17.gz',
+					//mode:'full',
+					//boxcolor:'#339933',textcolor:'#ffffff',
+				//},
 			],
 		});
 		$(function() { 
@@ -235,7 +228,6 @@
 									<a href="#tab-2048-2" data-toggle="tab" data-value="Sample Metadata">Sample Metadata</a>
 								</li>
 							</ul>
-							<!--
 							<div class="tab-content">
 								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
 									<div id="miso_data" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
@@ -244,7 +236,7 @@
 									<div id="sample_metadata" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
 								</div>
 							</div>					
-							-->
+							<!--
 							<div class="tab-content">
 								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
 									<div id="miso_data_ui" class="shiny-html-output"></div>
@@ -252,7 +244,8 @@
 								<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
 									<div id="sample_metadata_ui" class="shiny-html-output"></div>
 								</div>
-							</div>					
+							</div>
+							-->
 						</div>
 					</div> 				
 				</div>

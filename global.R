@@ -6,19 +6,19 @@ library(DT)
 library(ggplot2)
 
 ## Data manipulation
+## library(GenomicRanges)
 library(RSQLite)
-library(GenomicRanges)
 library(dplyr)
 library(tidyr)
 library(lazyeval)
 
 ## Gene info for lookups
-load("data/gene_lookup.RData")
-gene_list <- sort(unique(gene_lookup$symbol))
+## load("data/gene_lookup.RData")
+## gene_list <- sort(unique(gene_lookup$symbol))
 
 ## Miso event lookup
-load("data/AltMISOevent_lookup.RData")
-load("data/AltMISOevent_lookup_granges.RData")
+## load("data/AltMISOevent_lookup.RData")
+## load("data/AltMISOevent_lookup_granges.RData")
 
 ## sample metadata
 sample_metadata <- read.table("data/sample_metadata.txt", header = TRUE, sep = "\t", stringsAsFactors = FALSE)
