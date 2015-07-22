@@ -1,240 +1,240 @@
+<!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Splicing Data Browser</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<script type="application/shiny-singletons"></script>
-		<script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.1];htmlwidgets[0.4];datatables-binding[0.1];bootstrap[3.3.1]</script>
-		<script src="shared/json2-min.js"></script>
-		<script src="jquery.min.js"></script>
-		<link href="shared/shiny.css" rel="stylesheet" />
-		<script src="shared/shiny.min.js"></script>
-		<script src="htmlwidgets.js"></script>
-		<script src="datatables.js"></script>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-		<script src="shared/bootstrap/js/bootstrap.min.js"></script>
-		<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
-		<script src="shared/bootstrap/shim/respond.min.js"></script>
+  <head>
+    <title>Splicing Data Browser</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script type="application/shiny-singletons"></script>
+    <script type="application/html-dependencies">json2[2014.02.04];jquery[1.11.1];shiny[0.12.1];htmlwidgets[0.4];datatables-binding[0.1];bootstrap[3.3.1]</script>
+    <script src="shared/json2-min.js"></script>
+    <script src="jquery.min.js"></script>
+    <link href="shared/shiny.css" rel="stylesheet" />
+    <script src="shared/shiny.min.js"></script>
+    <script src="htmlwidgets.js"></script>
+    <script src="datatables.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="shared/bootstrap/js/bootstrap.min.js"></script>
+    <script src="shared/bootstrap/shim/html5shiv.min.js"></script>
+    <script src="shared/bootstrap/shim/respond.min.js"></script>
 
-		<link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
-		<script src="shared/selectize/js/selectize.min.js"></script>
-		<!--[if lt IE 9]>
-		<script src="shared/selectize/js/es5-shim.min.js"></script>
-		<![endif]-->
+    <link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+    <script src="shared/selectize/js/selectize.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="shared/selectize/js/es5-shim.min.js"></script>
+    <![endif]-->
 
-		<!-- WashU Browser -->
-		<!-- <link rel="stylesheet" type="text/css" href="http://23.236.55.13/browser/style.css" /> -->
-		<link rel="stylesheet" type="text/css" href="style.css" />
-		<script type="text/javascript" src="http://23.236.55.13/browser/base.js"></script>
-		<script type="text/javascript" src="http://23.236.55.13/browser/personality.js"></script>
-		<script type="text/javascript" src="http://23.236.55.13/browser/embed.js"></script>
+    <!-- WashU Browser -->
+    <!-- <link rel="stylesheet" type="text/css" href="http://23.236.55.13/browser/style.css" /> -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="http://23.236.55.13/browser/base.js"></script>
+    <script type="text/javascript" src="http://23.236.55.13/browser/personality.js"></script>
+    <script type="text/javascript" src="http://23.236.55.13/browser/embed.js"></script>
 
-		<!-- Miso class event listener -->
-		<script id="source" language="javascript" type="text/javascript">
-		var eventname = 'Event Name';
-		$(function() { 
-			$(document).on('click', '.miso', function() {
-				eventname = $(this).attr("eventID");
-				//var el = document.getElementById('misoEvent');
-				//el.value = eventname;
-				//Shiny.onInputChange("misoEvent", eventname);
-				$('#misoSelect').append($('<option>', {
-				    value: eventname,
-				    text: eventname
-				}));
-				$('#misoSelect').val(eventname);
-				$('#misoSelect').change();
-				// hide browser instuctions
-				$('#browser_header').hide();
-			});
-			$('#misoSelect').change(function() {
-			    eventname = $(this).val();
-			    Shiny.onInputChange("misoEvent", eventname);
-			});
+    <!-- Miso class event listener -->
+    <script id="source" language="javascript" type="text/javascript">
+     var eventname = 'Event Name';
+     $(function() { 
+       $(document).on('click', '.miso', function() {
+         eventname = $(this).attr("eventID");
+         //var el = document.getElementById('misoEvent');
+         //el.value = eventname;
+         //Shiny.onInputChange("misoEvent", eventname);
+         $('#misoSelect').append($('<option>', {
+	   value: eventname,
+	   text: eventname
+	 }));
+	 $('#misoSelect').val(eventname);
+	 $('#misoSelect').change();
+	 // hide browser instuctions
+	 $('#browser_header').hide();
+       });
+       $('#misoSelect').change(function() {
+	 eventname = $(this).val();
+	 Shiny.onInputChange("misoEvent", eventname);
+       });
+     });
+    </script>	
+  </head>
 
-		});
-		</script>	
-	</head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+	<div class="col-sm-12">
+	  <div class="well">
+	    <div class="row-fluid" style=width:100%>
+	      <div style="display: inline-block; margin: 0 15px">
+		<a class="h4" href="http://dmseq.org" >Home</a>
+	      </div>
+	      <div style="display: inline-block; margin: 0px 15px">
+		<a class="h4" href="http://dmseq.org/browser">Full Genome Browser</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
 
-	<body>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="well">
-						<div class="row-fluid" style=width:100%>
-							<div style="display: inline-block; margin: 0 15px">
-								<a class="h4" href="http://dmseq.org" >Home</a>
-							</div>
-							<div style="display: inline-block; margin: 0px 15px">
-								<a class="h4" href="http://dmseq.org/browser">Full Genome Browser</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+    <!--	Search for events using shiny inputs
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-sm-12">
+    <div class="well">
+    <div class="row-fluid" style="width:100%">
+    <div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+    <div class="form-group shiny-input-container">
+    <label for="coordinates">Coordinates:</label>
+    <input id="coordinates" type="text" class="form-control" value=""/>
+    </div>
+    </div>
+    <div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+    <div id="select_gene" class="shiny-html-output"></div>
+    </div>
+    <div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
+    <div id="select_isoform" class="shiny-html-output"></div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    -->
+    <div id="browser_header" class="container-fluid">
+      <div class="col-sm-12">
+	<div class="row" style="text-align: center">
+	  <h3> Click a MISO splicing event model in the browser to begin. </h3>
+	</div>
+      </div>
+    </div>		
+
+    <div class="container-fluid">
+      <div class="col-sm-12">
+	<div class = "row">
+	  <div style='margin:5px 20px; padding:5px 20px;' id="browser"></div>
+	</div>
+      </div>			
+    </div>
+    
+    <script type='text/javascript'>
+     var browserObj = embed_washugb({
+       host:'http://23.236.55.13/',
+       container:document.getElementById('browser'),
+       panelWidth: document.getElementById('browser').clientWidth - 150,
+       genome:'hg19',
+       hideMetadataColormap:true,
+       noDefaultTrack:true,
+       noDeleteButton:true,
+       coordinate:'chr3:151985828-152183568',
+       foregroundColor:'#000000',
+       backgroundColor:'#FFFFFF',
+       showContent:[
+         {type:'annotation',name:'MISO splicing events',url:'http://localhost/d/hg19/nonUTRevents_multiiso.hammock.gz',
+          mode:'full',
+          categories:{
+            1:['single-alternative-isoform','#AA6039'], 
+            2:['multiple-alternative-isoforms','#257059'],}
+         },
+         {type:'annotation',name:'RefSeq genes',url:'http://localhost/d/hg19/refGene.gz',
+          mode:'full',
+          boxcolor:'#002EB8',textcolor:'#ffffff',
+         },
+         {type:'annotation',name:'Ensembl genes',url:'http://localhost/d/hg19/ensGene.gz',
+          mode:'full',
+          boxcolor:'#891B00',textcolor:'#ffffff',
+         },
+         {type:'annotation',name:'UCSC known genes',url:'http://localhost/d/hg19/knownGene.gz',
+          mode:'full',
+          boxcolor:'#048091',textcolor:'#ffffff',
+         },
+         //{type:'annotation',name:'Gencode',url:'http://localhost/d/hg19/gencodeV17.gz',
+         //mode:'full',
+         //boxcolor:'#339933',textcolor:'#ffffff',
+         //},
+       ],
+     });
+     $(function() { 
+       $(window).resize(function() {
+         var w = $(window).width();
+         browserObj.sethmspan_refresh(document.getElementById('browser').clientWidth - 120);
+       });
+     });
+    </script>
+    
+    <div class="container-fluid">
+      <div class="row">
+	<div class="col-sm-12">
+	  <div class="well">
+	    <div style="display: block; width: 100%; margin: auto; vertical-align: middle" class="form-group shiny-input-container">
+	      <select id="misoSelect" class="form-control">
+		<option>Choose a MISO splicing event</option>
+	      </select>
+	    </div>
+	    <div style="display: none;" class="form-group shiny-input-container">
+	      <input id="misoEvent" type="text" class="form-control" value=""/>
+	    </div>
+	    <div style="display: block; margin: 1% 0 0 0; text-align: center">
+	      <button id="reset_inputs" type="button" class="btn btn-default action-button">Reset Session</button>
+	    </div>
+	  </div>
+	</div>                    
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+	<div class="col-sm-12">
+	  <div class="well">
+	    <div class="tabbable tabs-above">
+	      <ul class="nav nav-pills shiny-tab-input" id="plots_tabbox">
+		<li class="active">
+		  <a href="#tab-7775-1" data-toggle="tab" data-value="PSI ~ Diagnosis">PSI ~ Diagnosis</a>
+		</li>
+		<li>
+		  <a href="#tab-7775-2" data-toggle="tab" data-value="PSI ~ Sample">PSI ~ Sample</a>
+		</li>
+	      </ul>
+	      <div class="tab-content" style="padding: 1% 0% 0% 0%;">
+		<div class="tab-pane active" data-value="PSI ~ Diagnsosis" id="tab-7775-1">
+		  <div id="psi_diagnosis_plot" class="shiny-plot-output" style="width: 100%; height: 600px"></div>
 		</div>
+		<div class="tab-pane" data-value="PSI ~ Sample" id="tab-7775-2">
+		  <div id="psi_sample_plot" class="shiny-plot-output" style="width: 100%; height: 600px"></div>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+      </div>
+    </div>
 
-<!--	Search for events using shiny inputs
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="well">
-						<div class="row-fluid" style="width:100%">
-							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
-								<div class="form-group shiny-input-container">
-									<label for="coordinates">Coordinates:</label>
-									<input id="coordinates" type="text" class="form-control" value=""/>
-								</div>
-							</div>
-							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
-								<div id="select_gene" class="shiny-html-output"></div>
-							</div>
-							<div style="display: inline-block; width: 31%; margin: auto 1%; vertical-align: text-top">
-								<div id="select_isoform" class="shiny-html-output"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+    <div class="container-fluid">
+      <div class="row">
+	<div class="col-sm-2">
+	  <div id="show_vars" class="shiny-html-output"></div>
+	  <div id="download" class="shiny-html-output"></div>
+	</div>
+	<div class="col-sm-10">
+	  <div class="well">
+	    <div class="tabbable tabs-above">
+	      <ul class="nav nav-pills shiny-tab-input" id="raw_data_box" style="">
+		<li class="active">
+		  <a href="#tab-2048-1" data-toggle="tab" data-value="MISO Data">MISO Data</a>
+		</li>
+		<li>
+		  <a href="#tab-2048-2" data-toggle="tab" data-value="Sample Metadata">Sample Metadata</a>
+		</li>
+	      </ul>
+	      <div class="tab-content" style="padding: 1% 0% 0% 0%;">
+		<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
+		  <div id="miso_data" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
 		</div>
--->
-		<div id="browser_header" class="container-fluid">
-			<div class="col-sm-12">
-				<div class="row" style="text-align: center">
-					<h3> Click a MISO splicing event model in the browser to begin. </h3>
-				</div>
-			</div>
-		</div>		
-
-		<div class="container-fluid">
-			<div class="col-sm-12">
-				<div class = "row">
-					<div style='margin:5px 20px; padding:5px 20px;' id="browser"></div>
-				</div>
-			</div>			
+		<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
+		  <div id="sample_metadata" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
 		</div>
-		
-		<script type='text/javascript'>
-		var browserObj = embed_washugb({
-			host:'http://23.236.55.13/',
-			container:document.getElementById('browser'),
-			panelWidth: document.getElementById('browser').clientWidth - 150,
-			genome:'hg19',
-			hideMetadataColormap:true,
-			noDefaultTrack:true,
-			noDeleteButton:true,
-			coordinate:'chr3:151985828-152183568',
-			foregroundColor:'#000000',
-			backgroundColor:'#FFFFFF',
-			showContent:[
-				{type:'annotation',name:'MISO splicing events',url:'http://localhost/d/hg19/nonUTRevents_multiiso.hammock.gz',
-					mode:'full',
-					categories:{
-						1:['single-alternative-isoform','#AA6039'], 
-						2:['multiple-alternative-isoforms','#257059'],}
-				},
-				{type:'annotation',name:'RefSeq genes',url:'http://localhost/d/hg19/refGene.gz',
-					mode:'full',
-					boxcolor:'#002EB8',textcolor:'#ffffff',
-				},
-				{type:'annotation',name:'Ensembl genes',url:'http://localhost/d/hg19/ensGene.gz',
-					mode:'full',
-					boxcolor:'#891B00',textcolor:'#ffffff',
-				},
-				{type:'annotation',name:'UCSC known genes',url:'http://localhost/d/hg19/knownGene.gz',
-					mode:'full',
-					boxcolor:'#048091',textcolor:'#ffffff',
-				},
-				//{type:'annotation',name:'Gencode',url:'http://localhost/d/hg19/gencodeV17.gz',
-					//mode:'full',
-					//boxcolor:'#339933',textcolor:'#ffffff',
-				//},
-			],
-		});
-		$(function() { 
-			$(window).resize(function() {
-				var w = $(window).width();
-				browserObj.sethmspan_refresh(document.getElementById('browser').clientWidth - 120);
-			});
-		});
-		</script>
-		
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="well">
-						<div style="display: block; width: 100%; margin: auto; vertical-align: middle" class="form-group shiny-input-container">
-							<select id="misoSelect" class="form-control">
-								<option>Choose a MISO splicing event</option>
-							</select>
-						</div>
-						<div style="display: none;" class="form-group shiny-input-container">
-							<input id="misoEvent" type="text" class="form-control" value=""/>
-						</div>
-						<div style="display: block; margin: 1% 0 0 0; text-align: center">
-							<button id="reset_inputs" type="button" class="btn btn-default action-button">Reset Session</button>
-						</div>
-					</div>
-				</div>                    
-			</div>
-		</div>
-
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="well">
-						<div class="tabbable tabs-above">
-							<ul class="nav nav-pills shiny-tab-input" id="plots_tabbox">
-								<li class="active">
-									<a href="#tab-7775-1" data-toggle="tab" data-value="PSI ~ Diagnosis">PSI ~ Diagnosis</a>
-								</li>
-								<li>
-									<a href="#tab-7775-2" data-toggle="tab" data-value="PSI ~ Sample">PSI ~ Sample</a>
-								</li>
-							</ul>
-							<div class="tab-content" style="padding: 1% 0% 0% 0%;">
-								<div class="tab-pane active" data-value="PSI ~ Diagnsosis" id="tab-7775-1">
-									<div id="psi_diagnosis_plot" class="shiny-plot-output" style="width: 100%; height: 600px"></div>
-								</div>
-								<div class="tab-pane" data-value="PSI ~ Sample" id="tab-7775-2">
-									<div id="psi_sample_plot" class="shiny-plot-output" style="width: 100%; height: 600px"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-sm-2">
-					<div id="show_vars" class="shiny-html-output"></div>
-					<div id="download" class="shiny-html-output"></div>
-				</div>
-				<div class="col-sm-10">
-					<div class="well">
-						<div class="tabbable tabs-above">
-							<ul class="nav nav-pills shiny-tab-input" id="raw_data_box" style="">
-								<li class="active">
-									<a href="#tab-2048-1" data-toggle="tab" data-value="MISO Data">MISO Data</a>
-								</li>
-								<li>
-									<a href="#tab-2048-2" data-toggle="tab" data-value="Sample Metadata">Sample Metadata</a>
-								</li>
-							</ul>
-							<div class="tab-content" style="padding: 1% 0% 0% 0%;">
-								<div class="tab-pane active" data-value="MISO Data" style="height: 600px; overflow: auto" id="tab-2048-1">
-									<div id="miso_data" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
-								</div>
-								<div class="tab-pane" data-value="Sample Metadata" style="height: 600px; overflow: auto" id="tab-2048-2">
-									<div id="sample_metadata" style="width:100%; height:auto" class="datatables html-widget html-widget-output"></div>
-								</div>
-							</div>					
-						</div>
-					</div> 				
-				</div>
-			</div>			
-		</div>
-	</body>
+	      </div>					
+	    </div>
+	  </div> 				
+	</div>
+      </div>			
+    </div>
+  </body>
 </html>
